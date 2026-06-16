@@ -82,6 +82,8 @@
   --color-link-active: var(--color-primary-300);
   --color-focus: var(--color-primary-500);
   --color-selection-bg: color-mix(in oklch, var(--color-primary-200) 70%, white);
+
+  --header-height: var(--space-6);
 }
 
 /* 45em is a pretty average inflexion point for most desktop screen sizes coming from tablets */

@@ -1,48 +1,137 @@
 <main>
-  <section class="section">
-    <!-- About -->
-    <h1>Marcell Kiss</h1>
-    <h2>Designing digital experiences</h2>
+  <div id="section-container">
+    <section>
+      <!-- About -->
+      <div class="heading-container">
+        <h1 class="heading-underline">Marcell Kiss</h1>
+      </div>
 
-    <p>Software developer with more than 10 years of experience in developing frontend applications and custom software systems.</p>
-    <p>Interested in</p>
-    <ul>
-      <li>2D/3D graphics</li>
-      <li>UI/UX design</li>
-      <li>working with LLMs</li>
-      <li>human-computer interaction</li>
-    </ul>
-  </section>
+      <h2 class="heading-underline">Designing digital experiences</h2>
+      <p>Software developer with more than 10 years of experience in developing frontend applications and custom software systems.</p>
+      <p>Interested in</p>
+      <ul>
+        <li>2D/3D graphics</li>
+        <li>UI/UX design</li>
+        <li>working with LLMs</li>
+        <li>human-computer interaction</li>
+      </ul>
+    </section>
 
-  <section class="section">
-    <h2>Projects</h2>
-    <a href="https://github.com/xmlui-org/xmlui">xmlui</a>
-  </section>
+    <section>
+      <h2 class="heading-underline">Projects</h2>
+      <a href="https://github.com/xmlui-org/xmlui">xmlui</a>
+    </section>
 
-  <section class="section">
-    <h2>Contact</h2>
-    <a href="kiss.marcell.tamas@gmail.com">email</a>
-    <a href="github.com/marcello-tk">github</a>
-    <a href="www.linkedin.com/in/marcell-kiss-24924b132">linkedin</a>
-  </section>
+    <section>
+      <h2 class="heading-underline">Contact</h2>
+      <a href="kiss.marcell.tamas@gmail.com">email</a>
+      <a href="github.com/marcello-tk">github</a>
+      <a href="www.linkedin.com/in/marcell-kiss-24924b132">linkedin</a>
+    </section>
+  </div>
 </main>
 
 <style>
-  .section {
-    padding-inline: var(--space-6);
+  main {
+    overflow-x: hidden;
+    min-height: calc(100vh - var(--header-height));
+    display: flex;
+  }
+
+  #section-container {
+    /* position: relative; */
+    border-inline: 1px solid color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
+    margin-inline: var(--space-6);
+    padding-inline: var(--space-1);
+  }
+  /* #section-container::before {
+    content: "";
+    height: 100lvh;
+    width: 1px;
+    position: absolute;
+    background-color: color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
+    left: 0;
+  } */
+
+  .heading-container {
+    min-height: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    position: relative;
+  }
+  .heading-container::before {
+    content: "";
+    width: 200vw;
+    height: 1px;
+    position: absolute;
+    background-color: color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
+    left: -100vw;
+    top: 0;
+  }
+
+  .heading-underline {
+    position: relative;
+  }
+  .heading-underline::after {
+    content: "";
+    width: 200vw;
+    height: 1px;
+    position: absolute;
+    background-color: color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
+    left: -100vw;
+    bottom: 0;
+  }
+
+  h1.heading-underline::after {
+    bottom: calc(var(--fs-900) / 3);
+  }
+
+  h2.heading-underline::after {
+    bottom: 20px;
+  }
+
+  .element-with-cross {
+    position: relative;
+    border: 1px solid var(--color-border);
+  }
+
+  .element-with-cross::before,
+  .element-with-cross::after {
+    content: "";
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    color: color-mix(in oklch, var(--color-border) 70%, var(--color-text));
+    background:
+      linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat,
+      linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+  }
+
+  .element-with-cross::before {
+    top: -0.5rem;
+    left: -0.5rem;
+  }
+
+  .element-with-cross::after {
+    right: -0.5rem;
+    bottom: -0.5rem;
   }
 
   @media (min-width: 35em) {
-    .section {
-      padding-inline: var(--space-10);
+    #section-container {
+      margin-inline: var(--space-10);
+      padding-inline: var(--space-1);
     }
   }
 
   @media (min-width: 65em) {
-    .section {
+    #section-container {
       min-width: 30rem;
       max-width: 60rem;
       margin-inline: auto;
+      padding-inline: var(--space-2);
     }
   }
 </style>
