@@ -1,0 +1,349 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const colors = [
+  {
+    group: "Primary",
+    tokens: [
+      "var(--color-primary-50)",
+      "var(--color-primary-100)",
+      "var(--color-primary-200)",
+      "var(--color-primary-300)",
+      "var(--color-primary-400)",
+      "var(--color-primary-500)",
+      "var(--color-primary-600)",
+      "var(--color-primary-700)",
+      "var(--color-primary-800)",
+      "var(--color-primary-900)",
+      "var(--color-primary-950)",
+    ],
+  },
+  {
+    group: "Neutral",
+    tokens: [
+      "var(--color-neutral-0)",
+      "var(--color-neutral-50)",
+      "var(--color-neutral-100)",
+      "var(--color-neutral-200)",
+      "var(--color-neutral-300)",
+      "var(--color-neutral-400)",
+      "var(--color-neutral-500)",
+      "var(--color-neutral-600)",
+      "var(--color-neutral-700)",
+      "var(--color-neutral-800)",
+      "var(--color-neutral-900)",
+      "var(--color-neutral-950)",
+    ],
+  },
+  {
+    group: "Semantic",
+    tokens: [
+      "var(--color-bg)",
+      "var(--color-bg-elevated)",
+      "var(--color-surface)",
+      "var(--color-surface-strong)",
+      "var(--color-text)",
+      "var(--color-text-muted)",
+      "var(--color-border)",
+      "var(--color-link)",
+      "var(--color-link-hover)",
+      "var(--color-link-active)",
+      "var(--color-focus)",
+      "var(--color-selection-bg)",
+    ],
+  },
+];
+
+const spaces = [
+  ["space-0", "var(--space-0)"],
+  ["space-1", "var(--space-1)"],
+  ["space-2", "var(--space-2)"],
+  ["space-3", "var(--space-3)"],
+  ["space-4", "var(--space-4)"],
+  ["space-5", "var(--space-5)"],
+  ["space-6", "var(--space-6)"],
+  ["space-8", "var(--space-8)"],
+  ["space-10", "var(--space-10)"],
+  ["space-12", "var(--space-12)"],
+];
+
+const fontSizes = [
+  ["fs-300", "lh-300", "12px", "The quick brown fox jumps over the lazy dog"],
+  ["fs-400", "lh-400", "14px", "The quick brown fox jumps over the lazy dog"],
+  ["fs-500", "lh-500", "16px", "The quick brown fox jumps over the lazy dog"],
+  ["fs-600", "lh-600", "18px", "The quick brown fox jumps over the lazy dog"],
+  ["fs-700", "lh-700", "20px", "The quick brown fox jumps over the lazy dog"],
+  ["fs-800", "lh-800", "24px", "The quick brown fox jumps over the lazy dog"],
+  ["fs-900", "lh-900", "32px", "The quick brown fox jumps over the lazy dog"],
+];
+---
+
+<Layout title="Design Tokens">
+  <main class="tokens-page">
+    <header class="tokens-hero">
+      <p class="eyebrow">Design system preview</p>
+      <h1>Tokens</h1>
+      <p class="intro">
+        A live overview of the site's color, space, and type tokens so you can tune the system visually.
+      </p>
+    </header>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Colors</h2>
+        <p>Palette names, token names, and the values behind them.</p>
+      </div>
+
+      <div class="color-groups">
+        {colors.map((group) => (
+          <section class="color-group" aria-label={group.group}>
+            <h3>{group.group}</h3>
+            <div class="swatch-grid">
+              {group.tokens.map((token) => (
+                <div class="swatch" style={`--swatch-color: ${token};`}>
+                  <div class="swatch-sample" aria-hidden="true"></div>
+                  <div class="swatch-meta">
+                    <span class="swatch-name">{token.replace("var(", "").replace(")", "")}</span>
+                    <code>{token}</code>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Spacing</h2>
+        <p>Each bar grows from the same baseline so the scale reads at a glance.</p>
+      </div>
+
+      <div class="space-graph" aria-label="Spacing scale">
+        {spaces.map(([name, token]) => (
+          <div class="space-row">
+            <div class="space-label">
+              <strong>{name}</strong>
+              <span>{token}</span>
+            </div>
+            <div class="space-bar-wrap">
+              <div
+                class="space-bar"
+                style={`width: var(--${name})`}
+                title={`${name}: ${token}`}
+              ></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Typography</h2>
+        <p>Font size and line-height pairs shown in a reference list like the sample image.</p>
+      </div>
+
+      <div class="type-scale">
+        {fontSizes.map(([sizeToken, lineToken, label, sample]) => (
+          <div class="type-row">
+            <div class="type-label">
+              <strong>{label}</strong>
+              <span>{sizeToken} / {lineToken}</span>
+            </div>
+            <p
+              class="type-sample"
+              style={`font-size: var(--${sizeToken}); line-height: var(--${lineToken});`}
+            >
+              {sample}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .tokens-page {
+    width: min(1120px, calc(100% - 2rem));
+    margin-inline: auto;
+    padding-block: 4rem 6rem;
+  }
+
+  .tokens-hero {
+    display: grid;
+    gap: var(--space-3);
+    margin-bottom: var(--space-10);
+  }
+
+  .eyebrow {
+    color: var(--color-text-muted);
+    font-size: var(--fs-300);
+    line-height: var(--lh-300);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  .intro {
+    max-width: 60ch;
+    color: var(--color-text-muted);
+    font-size: var(--fs-500);
+    line-height: var(--lh-500);
+  }
+
+  .panel {
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background: var(--color-bg-elevated);
+    box-shadow: 0 1px 0 color-mix(in oklch, var(--color-text) 6%, transparent);
+  }
+
+  .panel-head {
+    display: grid;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+
+  .panel-head p {
+    color: var(--color-text-muted);
+    font-size: var(--fs-400);
+    line-height: var(--lh-400);
+  }
+
+  .color-groups {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .color-group {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .swatch {
+    padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background: var(--color-bg);
+  }
+
+  .swatch-sample {
+    min-height: 4rem;
+    border-radius: calc(var(--border-radius) * 1.25);
+    background: var(--swatch-color);
+    border: 1px solid color-mix(in oklch, var(--color-text) 8%, transparent);
+  }
+
+  .swatch-meta {
+    display: grid;
+    gap: 0.25rem;
+    margin-top: var(--space-3);
+  }
+
+  .swatch-name {
+    font-size: var(--fs-400);
+    line-height: var(--lh-400);
+  }
+
+  .swatch-meta code,
+  .space-label span {
+    color: var(--color-text-muted);
+    font-size: var(--fs-300);
+    line-height: var(--lh-300);
+    word-break: break-word;
+  }
+
+  .space-graph {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .space-row {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  .space-label {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .space-label strong {
+    font-size: var(--fs-400);
+    line-height: var(--lh-400);
+  }
+
+  .space-bar-wrap {
+    min-width: 0;
+  }
+
+  .space-bar {
+    height: 1.5rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--color-primary-500), var(--color-primary-300));
+  }
+
+  .type-scale {
+    display: grid;
+    gap: 0;
+  }
+
+  .type-row {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+    padding-block: var(--space-3);
+    border-top: 1px solid color-mix(in oklch, var(--color-border) 82%, transparent);
+  }
+
+  .type-row:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .type-label {
+    display: grid;
+    gap: 0.2rem;
+    padding-top: 0.14em;
+  }
+
+  .type-label strong {
+    font-size: var(--fs-400);
+    line-height: var(--lh-400);
+  }
+
+  .type-sample {
+    color: var(--color-text);
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 42em) {
+    .tokens-page {
+      width: min(100% - 1rem, 1120px);
+      padding-block: 2rem 4rem;
+    }
+
+    .panel {
+      padding: var(--space-4);
+    }
+
+    .space-row,
+    .type-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+  }
+</style>
