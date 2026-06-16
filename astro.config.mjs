@@ -7,10 +7,10 @@ export default defineConfig({
   integrations: [react()],
   fonts: [{
     provider: fontProviders.google(),
-    name: "Lexend Deca",
+    name: "Fustat",
     cssVariable: "--ff-sans",
     styles: ["normal"],
-    weights: ["200 900"],
-    fallbacks: ["sans-serif"]
+    weights: ["300 800"],
+    fallbacks: ["Tahoma", "Segoe UI", "sans-serif"]
   }]
 });

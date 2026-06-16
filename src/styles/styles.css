@@ -24,6 +24,7 @@
   --space-8: 3rem;     /* 48px */
   --space-10: 4rem;    /* 64px */
   --space-12: 6rem;    /* 96px */
+  --space-14: 10rem;
 
   --border-radius: 4px;
 
@@ -83,23 +84,12 @@
   --color-selection-bg: color-mix(in oklch, var(--color-primary-200) 70%, white);
 }
 
-@media (min-width: 35em) {
-  :root {
-    /* notice that we only redefine the ones we need to be changed */
-    --fs-800: 5rem;
-    --fs-700: 2.5rem;
-    --fs-600: 1.5rem;
-    --fs-400: 1rem;
-  }
-}
-
 /* 45em is a pretty average inflexion point for most desktop screen sizes coming from tablets */
 @media (min-width: 45em) {
   :root {
     --fs-800: 2.25rem;
     --fs-700: 2rem;
     --fs-600: 1.5rem;
-    --fs-400: 1.125rem;
   }
 }
 
@@ -187,13 +177,18 @@ body {
 h1 {
   font-size: var(--fs-900);
   line-height: var(--lh-900);
+  font-weight: 500;
   /* padding-block: 0.1em 0.22em; */
 }
 
 h2 {
   font-size: var(--fs-800);
   line-height: var(--lh-800);
-  /* padding-block: 0.14em 0.28em; */
+  padding-block: var(--space-4) var(--space-2);
+}
+
+h1 + h2 {
+  padding-top: 0;
 }
 
 h3 {

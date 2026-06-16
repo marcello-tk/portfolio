@@ -1,5 +1,5 @@
 <main>
-  <section>
+  <section class="section">
     <!-- About -->
     <h1>Marcell Kiss</h1>
     <h2>Designing digital experiences</h2>
@@ -14,12 +14,12 @@
     </ul>
   </section>
 
-  <section>
+  <section class="section">
     <h2>Projects</h2>
     <a href="https://github.com/xmlui-org/xmlui">xmlui</a>
   </section>
 
-  <section>
+  <section class="section">
     <h2>Contact</h2>
     <a href="kiss.marcell.tamas@gmail.com">email</a>
     <a href="github.com/marcello-tk">github</a>
@@ -28,4 +28,21 @@
 </main>
 
 <style>
+  .section {
+    padding-inline: var(--space-6);
+  }
+
+  @media (min-width: 35em) {
+    .section {
+      padding-inline: var(--space-10);
+    }
+  }
+
+  @media (min-width: 65em) {
+    .section {
+      min-width: 30rem;
+      max-width: 60rem;
+      margin-inline: auto;
+    }
+  }
 </style>
