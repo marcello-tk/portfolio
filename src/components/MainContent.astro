@@ -43,9 +43,8 @@
   }
 
   #section-container {
-    /* position: relative; */
     border-inline: 1px solid
-      color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
+      color-mix(in oklch, var(--color-neutral-950) 10%, transparent);
     margin-inline: var(--space-6);
   }
   .non-hero-section {
@@ -58,6 +57,7 @@
   }
   .heading-container::before {
     content: "";
+    z-index: 1;
     width: 200vw;
     height: 1px;
     position: absolute;
@@ -71,6 +71,7 @@
   }
   .heading-container::after {
     content: "";
+    z-index: 1;
     width: 200vw;
     height: 1px;
     position: absolute;
@@ -115,10 +116,6 @@
     left: -100vw;
     bottom: 0;
   }
-
-  /* h1.heading-underline::after {
-    bottom: calc(var(--fs-900) / 3);
-  } */
 
   h2.heading-underline::after {
     bottom: 20px;
@@ -327,23 +324,28 @@
 
       float band = smoothstep(0.6, 0.0, abs(d1)) * 0.35
                 + smoothstep(0.5, 0.0, abs(d2)) * 0.4
-                + smoothstep(0.1, 0.0, abs(d3)) * 0.1;
+                + smoothstep(0.3, 0.0, abs(d3)) * 0.1;
       band = clamp(band, 0.0, 1.0);
 
-      vec3 color = mix(uColorB, uColorA, band);
+      // Keep dithering out of the two endpoint colors so light backgrounds
+      // stay clean while the transition still gets a chunky halftone breakup.
+      float endpointMask = smoothstep(0.02, 0.25, band)
+                         * smoothstep(0.02, 0.25, 1.0 - band);
 
       // ---- ordered dithering ----
-      // shift the quantization threshold per-pixel using the bayer
-      // pattern so flat color bands break up into a dither/halftone grid
+      // Shift the quantization threshold per-pixel using the Bayer pattern,
+      // but apply it to the mix amount instead of the final RGB color.
       float bayer = Bayer8(gl_FragCoord.xy / uPixel) - 0.5;
-      vec3 dithered = floor(color * uLevels + bayer) / uLevels;
+      float quantizedBand = floor(band * uLevels + bayer) / uLevels;
+      band = mix(band, quantizedBand, endpointMask);
 
       // ---- film grain on top ----
       float n = hash12(gl_FragCoord.xy + fract(uTime) * 120.0) - 0.5;
-      dithered += n * uGrain;
+      band = clamp(band + n * uGrain * endpointMask, 0.0, 1.0);
 
-      //gl_FragColor = vec4(color, 1.0);
-      gl_FragColor = vec4(dithered, 1.0);
+      vec3 color = mix(uColorB, uColorA, band);
+
+      gl_FragColor = vec4(color, 1.0);
     }
   `,
   });
