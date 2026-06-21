@@ -12,6 +12,24 @@
     display: flex;
     justify-content: end;
     align-items: center;
+    margin-inline: var(--space-6);
+    padding-inline: var(--space-1);
+  }
+
+  @media (min-width: 35em) {
+    header {
+      margin-inline: var(--space-10);
+      padding-inline: var(--space-1);
+    }
+  }
+
+  @media (min-width: 65em) {
+    header {
+      min-width: 30rem;
+      max-width: 60rem;
+      margin-inline: auto;
+      padding-inline: var(--space-2);
+    }
   }
 
   nav {

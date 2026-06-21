@@ -29,7 +29,8 @@
   --border-radius: 4px;
 
   /* Brand seed */
-  --color-primary: oklch(42.2% 0.2757 267.8);
+  --color-primary: hsl(245, 89%, 46%);
+  --color-neutral: hsl(212, 5%, 52%);
 
   /*
     Neutral ramp
@@ -41,7 +42,7 @@
   --color-neutral-200: oklch(91.2% 0.008 255);
   --color-neutral-300: oklch(84.1% 0.01 255);
   --color-neutral-400: oklch(72.8% 0.012 255);
-  --color-neutral-500: oklch(60.8% 0.013 255);
+  --color-neutral-500: var(--color-neutral);
   --color-neutral-600: oklch(48.7% 0.014 255);
   --color-neutral-700: oklch(36.9% 0.015 255);
   --color-neutral-800: oklch(25.9% 0.015 255);
@@ -82,6 +83,9 @@
   --color-link-active: var(--color-primary-300);
   --color-focus: var(--color-primary-500);
   --color-selection-bg: color-mix(in oklch, var(--color-primary-200) 70%, white);
+
+  --shader-wave-color: rgb(from var(--color-primary-400) r g b);
+  --shader-bg-color: rgb(from var(--color-neutral-0) r g b);
 
   --header-height: var(--space-6);
 }
@@ -187,10 +191,6 @@ h2 {
   font-size: var(--fs-800);
   line-height: var(--lh-800);
   padding-block: var(--space-4) var(--space-2);
-}
-
-h1 + h2 {
-  padding-top: 0;
 }
 
 h3 {

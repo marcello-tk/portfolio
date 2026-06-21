@@ -1,13 +1,17 @@
 <main>
   <div id="section-container">
-    <section>
-      <!-- About -->
-      <div class="heading-container">
-        <h1 class="heading-underline">Marcell Kiss</h1>
-      </div>
+    <!-- About -->
+    <div class="heading-container">
+      <canvas id="heading-canvas" aria-hidden="true"></canvas>
+      <h1 class="title">Marcell Kiss</h1>
+    </div>
 
+    <section class="non-hero-section">
       <h2 class="heading-underline">Designing digital experiences</h2>
-      <p>Software developer with more than 10 years of experience in developing frontend applications and custom software systems.</p>
+      <p>
+        Software developer with more than 10 years of experience in developing
+        frontend applications and custom software systems.
+      </p>
       <p>Interested in</p>
       <ul>
         <li>2D/3D graphics</li>
@@ -17,12 +21,12 @@
       </ul>
     </section>
 
-    <section>
+    <section class="non-hero-section">
       <h2 class="heading-underline">Projects</h2>
       <a href="https://github.com/xmlui-org/xmlui">xmlui</a>
     </section>
 
-    <section>
+    <section class="non-hero-section">
       <h2 class="heading-underline">Contact</h2>
       <a href="kiss.marcell.tamas@gmail.com">email</a>
       <a href="github.com/marcello-tk">github</a>
@@ -40,24 +44,16 @@
 
   #section-container {
     /* position: relative; */
-    border-inline: 1px solid color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
+    border-inline: 1px solid
+      color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
     margin-inline: var(--space-6);
+  }
+  .non-hero-section {
     padding-inline: var(--space-1);
   }
-  /* #section-container::before {
-    content: "";
-    height: 100lvh;
-    width: 1px;
-    position: absolute;
-    background-color: color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
-    left: 0;
-  } */
 
   .heading-container {
-    min-height: 200px;
-    display: flex;
-    flex-direction: row;
-    align-items: end;
+    height: clamp(200px, 28vw, 400px);
     position: relative;
   }
   .heading-container::before {
@@ -65,9 +61,42 @@
     width: 200vw;
     height: 1px;
     position: absolute;
-    background-color: color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
+    background-color: color-mix(
+      in oklab,
+      var(--color-neutral-950) 10%,
+      transparent
+    );
     left: -100vw;
     top: 0;
+  }
+  .heading-container::after {
+    content: "";
+    width: 200vw;
+    height: 1px;
+    position: absolute;
+    background-color: color-mix(
+      in oklab,
+      var(--color-neutral-950) 10%,
+      transparent
+    );
+    left: -100vw;
+    bottom: 0;
+  }
+
+  .title {
+    z-index: 1;
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+  }
+
+  #heading-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    pointer-events: none;
   }
 
   .heading-underline {
@@ -78,14 +107,18 @@
     width: 200vw;
     height: 1px;
     position: absolute;
-    background-color: color-mix(in oklab, var(--color-neutral-950) 10%, transparent);
+    background-color: color-mix(
+      in oklab,
+      var(--color-neutral-950) 10%,
+      transparent
+    );
     left: -100vw;
     bottom: 0;
   }
 
-  h1.heading-underline::after {
+  /* h1.heading-underline::after {
     bottom: calc(var(--fs-900) / 3);
-  }
+  } */
 
   h2.heading-underline::after {
     bottom: 20px;
@@ -122,16 +155,223 @@
   @media (min-width: 35em) {
     #section-container {
       margin-inline: var(--space-10);
+    }
+
+    .non-hero-section {
       padding-inline: var(--space-1);
     }
   }
 
   @media (min-width: 65em) {
     #section-container {
+      width: 100%;
       min-width: 30rem;
       max-width: 60rem;
       margin-inline: auto;
+    }
+
+    .non-hero-section {
       padding-inline: var(--space-2);
     }
   }
 </style>
+
+<script>
+  import * as THREE from "three";
+
+  const canvas = document.querySelector("#heading-canvas");
+
+  if (!(canvas instanceof HTMLCanvasElement)) {
+    throw new Error("Element is not canvas!");
+  }
+
+  const cssColorToThree = (() => {
+    const probe = document.createElement("span");
+    probe.style.position = "absolute";
+    probe.style.visibility = "hidden";
+    probe.style.pointerEvents = "none";
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = 1;
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+    document.body.appendChild(probe);
+
+    return (cssVariableName: string) => {
+      if (!ctx) {
+        throw new Error("Could not create 2D canvas context");
+      }
+
+      probe.style.color = `var(${cssVariableName})`;
+
+      const resolved = getComputedStyle(probe).color;
+
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = resolved;
+      ctx.fillRect(0, 0, 1, 1);
+
+      const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+
+      return new THREE.Color().setRGB(
+        r / 255,
+        g / 255,
+        b / 255,
+        THREE.SRGBColorSpace,
+      );
+    };
+  })();
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: false,
+    alpha: true,
+  });
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+  const uniforms = {
+    uTime: { value: 0 },
+    uResolution: {
+      value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+    },
+    uColorA: {
+      value: new THREE.Color(cssColorToThree("--shader-wave-color")),
+    }, // wave / foreground color
+    uColorB: {
+      value: new THREE.Color(cssColorToThree("--shader-bg-color")),
+    }, // background color
+    uSpeed: { value: 10 },
+    uLevels: { value: 4.0 },
+    uGrain: { value: 0.02 },
+    uPixel: { value: 2.0 },
+    uAngle: { value: Math.PI * 0.8 },
+  };
+
+  const material = new THREE.ShaderMaterial({
+    uniforms,
+    vertexShader: `
+    varying vec2 vUv;
+
+    void main() {
+      vUv = uv;
+      gl_Position = vec4(position.xy, 0.0, 1.0);
+    }
+  `,
+    fragmentShader: `
+    precision highp float;
+
+    uniform float uTime;
+    uniform vec2 uResolution;
+    uniform vec3 uColorA;
+    uniform vec3 uColorB;
+    uniform float uSpeed;
+    uniform float uLevels;
+    uniform float uGrain;
+    uniform float uPixel;
+    uniform float uAngle;
+
+    varying vec2 vUv;
+
+    vec2 rotate2D(vec2 p, float a) {
+      float c = cos(a);
+      float s = sin(a);
+      return mat2(c, -s, s, c) * p;
+    }
+
+    // ---- cheap hash noise, used for grain ----
+    float hash12(vec2 p) {
+      vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+      p3 += dot(p3, p3.yzx + 33.33);
+      return fract((p3.x + p3.y) * p3.z);
+    }
+
+    // ---- recursive Bayer matrix (gives 8x8 ordered-dither pattern
+    //      without needing an array / texture lookup) ----
+    float Bayer2(vec2 a) {
+      a = floor(a);
+      return fract(a.x / 2.0 + a.y * a.y * 0.75);
+    }
+    #define Bayer4(a)  (Bayer2(0.5 * (a)) * 0.25 + Bayer2(a))
+    #define Bayer8(a)  (Bayer4(0.5 * (a)) * 0.25 + Bayer2(a))
+
+    // ---- layered sine waves: a few offset bands moving at
+    //      slightly different speeds/phases, like the source effect ----
+    float waveLine(vec2 p, float t, float phase) {
+      float w = 0.0;
+      w += sin(p.x * 3.2 + t * 0.3 + phase) * 0.16;
+      w += sin(p.x * 2.1 - t * 1.4 + phase * 1.7) * 0.01;
+      return p.y - (w);
+    }
+
+    void main() {
+      // pixelate the UVs slightly first -- gives that blocky/retro look
+      // that reads well once dithered
+      vec2 res = uResolution / uPixel;
+      vec2 uv = floor(vUv * res) / res;
+
+      float aspect = uResolution.x / uResolution.y;
+      // center the coords first
+      vec2 p = vec2((uv.x - 0.5) * aspect, uv.y - 0.5);
+
+      // rotate the whole field
+      p = rotate2D(p, uAngle);
+      float t = uTime * uSpeed;
+
+      // three offset wave bands stacked for depth
+      float d1 = waveLine(p, t, 0.05);
+      float d2 = waveLine(p, t, 0.05);
+      float d3 = waveLine(p, t, 0.05);
+
+      float band = smoothstep(0.6, 0.0, abs(d1)) * 0.35
+                + smoothstep(0.5, 0.0, abs(d2)) * 0.4
+                + smoothstep(0.1, 0.0, abs(d3)) * 0.1;
+      band = clamp(band, 0.0, 1.0);
+
+      vec3 color = mix(uColorB, uColorA, band);
+
+      // ---- ordered dithering ----
+      // shift the quantization threshold per-pixel using the bayer
+      // pattern so flat color bands break up into a dither/halftone grid
+      float bayer = Bayer8(gl_FragCoord.xy / uPixel) - 0.5;
+      vec3 dithered = floor(color * uLevels + bayer) / uLevels;
+
+      // ---- film grain on top ----
+      float n = hash12(gl_FragCoord.xy + fract(uTime) * 120.0) - 0.5;
+      dithered += n * uGrain;
+
+      //gl_FragColor = vec4(color, 1.0);
+      gl_FragColor = vec4(dithered, 1.0);
+    }
+  `,
+  });
+
+  scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+  const resize = () => {
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.max(1, Math.floor(rect.width));
+    const height = Math.max(1, Math.floor(rect.height));
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(width, height, false);
+    uniforms.uResolution.value.set(width, height);
+  };
+
+  const timer = new THREE.Timer();
+  timer.connect(document);
+
+  const render = () => {
+    const frame = requestAnimationFrame(render);
+    timer.update(frame);
+    uniforms.uTime.value = timer.getElapsed();
+    renderer.render(scene, camera);
+  };
+
+  resize();
+  render();
+
+  window.addEventListener("resize", resize);
+</script>
